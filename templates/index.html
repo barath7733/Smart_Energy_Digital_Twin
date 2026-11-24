@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#101827"><title>WattWise — Smart Energy Digital Twin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script><link rel="stylesheet" href="{{ url_for('static',filename='style.css') }}">
+</head>
+<body><div class="app-shell">
+<aside class="sidebar"><a class="brand" href="#"><span class="brand-mark">W</span><span>WattWise<small>ENERGY INTELLIGENCE</small></span></a>
+<div class="side-label">WORKSPACE</div><a class="nav-link active" href="#overview">◫ &nbsp; Overview</a><a class="nav-link" href="#twin">◉ &nbsp; Digital twin</a><a class="nav-link" href="#analytics">⌁ &nbsp; Analytics</a><a class="nav-link" href="#alerts">⚑ &nbsp; Alerts <span id="alertNavCount" class="nav-count">0</span></a>
+<div class="sidebar-bottom"><div class="demo-card"><span class="live-dot"></span><div><b>Simulation mode</b><small>No hardware connected</small></div></div><div class="side-foot">B.Tech IT · Mini Project<br>IoT & Cloud Analytics</div></div></aside>
+<main class="main">
+<header class="topbar"><div><div class="eyebrow">ENERGY OPERATIONS / OVERVIEW</div><h1>Smart energy dashboard</h1><p class="subhead">Monitor a simulated energy system through its digital twin.</p></div><div class="top-actions"><span class="status-pill"><i></i> System online</span><button class="btn btn-ghost" id="exportBtn">↓ Export CSV</button></div></header>
+<div class="demo-banner"><span class="banner-icon">ⓘ</span><div><b>DEMO DATA</b><span>All readings are simulated. Alerts indicate possible measurement differences, not confirmed energy theft or real electrical danger.</span></div></div>
+<section id="overview" class="metric-grid">
+<article class="metric-card"><div class="metric-top"><span>Total source energy</span><span class="metric-icon violet">ϟ</span></div><div class="metric-value"><span id="sourceTotal">—</span><small>kWh</small></div><div class="metric-foot">● Energy entering the demo system</div></article>
+<article class="metric-card"><div class="metric-top"><span>Downstream load</span><span class="metric-icon cyan">⌁</span></div><div class="metric-value"><span id="loadTotal">—</span><small>kWh</small></div><div class="metric-foot">● Energy recorded at the load</div></article>
+<article class="metric-card"><div class="metric-top"><span>Energy difference</span><span class="metric-icon amber">↗</span></div><div class="metric-value"><span id="lossPercent">—</span><small>%</small></div><div class="metric-foot"><span id="lossKwh">— kWh difference</span></div></article>
+<article class="metric-card"><div class="metric-top"><span>Estimated carbon</span><span class="metric-icon green">♧</span></div><div class="metric-value"><span id="carbonTotal">—</span><small>kg CO₂e</small></div><div class="metric-foot">Based on configurable factor</div></article></section>
+<section class="content-grid">
+<article class="panel chart-panel" id="analytics"><div class="panel-heading"><div><div class="eyebrow">SIMULATION HISTORY</div><h2>Energy flow</h2><p>Source energy compared with downstream load</p></div><span class="chart-tag">Recent readings</span></div><div class="chart-wrap"><canvas id="energyChart"></canvas></div><div class="chart-legend"><span><i class="legend-source"></i> Source (kWh)</span><span><i class="legend-load"></i> Load (kWh)</span></div></article>
+<article class="panel twin-panel" id="twin"><div class="panel-heading"><div><div class="eyebrow">VIRTUAL SYSTEM MODEL</div><h2>Digital twin</h2><p>Illustrative energy-system state</p></div><span class="twin-status"><i></i> Simulated</span></div>
+<div class="twin-visual"><div class="twin-grid"></div><div class="flow-line flow-one"></div><div class="flow-line flow-two"></div>
+<div class="twin-node meter-node"><span class="node-symbol">ϟ</span><b>Smart meter</b><small>Source</small><strong id="twinSource">— kWh</strong></div>
+<div class="twin-node load-node"><span class="node-symbol">⌂</span><b>Building load</b><small>Downstream</small><strong id="twinLoad">— kWh</strong></div>
+<div class="twin-node cloud-node"><span class="node-symbol">☁</span><b>Analytics engine</b><small>Local database</small></div><div class="twin-center"><span class="pulse"></span><b>DATA</b><small>SIMULATED</small></div></div>
+<div class="twin-stats"><div><span>Voltage</span><b id="voltage">— V</b></div><div><span>Current</span><b id="current">— A</b></div><div><span>Temperature</span><b id="temperature">— °C</b></div></div></article></section>
+<section class="bottom-grid">
+<article class="panel controls-panel"><div class="panel-heading"><div><div class="eyebrow">TEST THE DIGITAL TWIN</div><h2>Generate a reading</h2><p>Select a scenario to see the analytics respond.</p></div></div>
+<div class="scenario-list"><button class="scenario selected" data-scenario="normal"><span class="scenario-icon normal-icon">✓</span><span><b>Normal operation</b><small>Typical simulated values</small></span><span class="scenario-arrow">→</span></button>
+<button class="scenario" data-scenario="high_load"><span class="scenario-icon high-icon">ϟ</span><span><b>High load</b><small>Higher power and temperature</small></span><span class="scenario-arrow">→</span></button>
+<button class="scenario" data-scenario="imbalance"><span class="scenario-icon imbalance-icon">↕</span><span><b>Energy imbalance</b><small>Increased source/load difference</small></span><span class="scenario-arrow">→</span></button></div>
+<div class="button-row"><button class="btn btn-primary" id="simulateBtn">＋ Generate reading</button><button class="btn btn-ghost" id="resetBtn">Reset demo</button></div><div class="feedback" id="actionFeedback" role="status"></div></article>
+<article class="panel alerts-panel" id="alerts"><div class="panel-heading"><div><div class="eyebrow">RULE-BASED MONITORING</div><h2>System alerts</h2><p>Alerts based on the current reading window and thresholds.</p></div><span class="alert-counter" id="alertCount">0</span></div>
+<div id="alertsList" class="alerts-list"><div class="empty-state">Loading alert status…</div></div><div class="alert-note">A difference can result from meter accuracy, timing, wiring losses, or assumptions. It does not prove theft.</div></article></section>
+<section class="panel settings-panel"><div class="panel-heading"><div><div class="eyebrow">CONFIGURATION</div><h2>Demo thresholds & carbon factor</h2><p>These values are for demonstration; use validated and cited values for real studies.</p></div></div>
+<form id="settingsForm" class="settings-grid"><label>Grid emission factor <span>kg CO₂e/kWh</span><input id="emissionFactor" type="number" min="0" max="5" step=".01" required></label><label>Energy difference alert <span>%</span><input id="lossThreshold" type="number" min=".1" max="100" step=".1" required></label><label>Power limit <span>kW</span><input id="powerLimit" type="number" min=".1" max="10000" step=".1" required></label><button class="btn btn-primary save-btn" type="submit">Save settings</button></form>
+<p class="settings-foot">The initial 0.70 kg CO₂e/kWh factor is an illustrative placeholder, not an official current Indian grid factor. Replace it with a documented factor and record its source/year in your report.</section>
+<footer>WattWise · Cloud-Enabled IoT Smart Energy Monitoring Using Digital Twin Technology <span>Academic prototype · Simulation only</span></footer>
+</main></div><script src="{{ url_for('static',filename='app.js') }}"></script></body></html>
